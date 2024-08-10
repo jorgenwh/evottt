@@ -1,5 +1,5 @@
 import numpy as np
-from evottt import Board, GameResult
+from evottt.ttt.board import Board, GameResult
 
 def test_position_is_empty():
     board = Board()
