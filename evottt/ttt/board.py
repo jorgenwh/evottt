@@ -1,3 +1,4 @@
+import numpy as np
 from enum import Enum
 
 # State explanation:
@@ -63,6 +64,13 @@ class Board():
         if self.state & (1 << position): return 0
         if self.state & (1 << (position + 9)): return 1
         return 2
+
+    def get_neural_representation(self) -> np.ndarray:
+        r = np.zeros(9, dtype=float)
+        for position in range(9):
+            if self.position_contains_player(position, 0): r[position] = 1
+            if self.position_contains_player(position, 1): r[position] = -1
+        return r
 
     def __str__(self) -> str:
         state_list = []

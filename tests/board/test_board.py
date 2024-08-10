@@ -1,3 +1,4 @@
+import numpy as np
 from evottt import Board, GameResult
 
 def test_position_is_empty():
@@ -16,6 +17,19 @@ def test_position_is_empty():
     assert not board.position_is_empty(0)
     board.apply_move(5, 0)
     assert not board.position_is_empty(5)
+
+def test_position_contains_player():
+    board = Board()
+    for position in range(9):
+        assert not board.position_contains_player(position, 0)
+        assert not board.position_contains_player(position, 1)
+
+    board.apply_move(0, 0)
+    board.apply_move(4, 1)
+    board.apply_move(8, 0)
+    assert board.position_contains_player(0, 0)
+    assert board.position_contains_player(4, 1)
+    assert board.position_contains_player(8, 0)
 
 def test_valid_moves_empty_board():
     board = Board()
@@ -102,3 +116,35 @@ def test_diagonal_wins():
     board.apply_move(4, 0)
     board.apply_move(6, 0)
     assert board.get_result() == GameResult.X_WINS
+
+def test_get_position():
+    board = Board()
+    for position in range(9):
+        assert board.get_position(position) == 2
+
+    board.apply_move(0, 0)
+    assert board.get_position(0) == 0
+    assert board.get_position(1) == 2
+
+    board.apply_move(1, 1)
+    assert board.get_position(0) == 0
+    assert board.get_position(1) == 1
+    assert board.get_position(2) == 2
+
+def test_get_neural_representation():
+    board = Board()
+    assert np.array_equal(board.get_neural_representation(), np.array([0, 0, 0, 0, 0, 0, 0, 0, 0], dtype=float))
+
+    board.apply_move(0, 0)
+    assert np.array_equal(board.get_neural_representation(), np.array([1, 0, 0, 0, 0, 0, 0, 0, 0], dtype=float))
+
+    board.apply_move(1, 1)
+    assert np.array_equal(board.get_neural_representation(), np.array([1, -1, 0, 0, 0, 0, 0, 0, 0], dtype=float))
+
+    board.apply_move(8, 0)
+    board.apply_move(5, 1)
+    assert np.array_equal(board.get_neural_representation(), np.array([1, -1, 0, 0, 0, -1, 0, 0, 1], dtype=float))
+
+    board.apply_move(6, 1)
+    board.apply_move(7, 1)
+    assert np.array_equal(board.get_neural_representation(), np.array([1, -1, 0, 0, 0, -1, -1, -1, 1], dtype=float))
