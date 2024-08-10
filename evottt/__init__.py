@@ -1,1 +1,1 @@
-from .ttt import Board, GameResult
+from .manager import Config, Manager
