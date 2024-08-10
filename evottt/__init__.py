@@ -1,1 +1,1 @@
-from .ttt import Board
+from .ttt import Board, GameResult
